@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>有一封信</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 48% 42%,#f6f4eb,#e7e4d8);color:#363626;font-family:Georgia,"Songti SC","SimSun",serif}
+main{min-height:100svh;display:grid;place-items:center;overflow:hidden;padding:24px}
+.scene{position:relative;width:min(100%,440px);height:min(580px,calc(100svh - 48px));min-height:min(460px,calc(100svh - 48px));perspective:1100px}
+.mail{position:absolute;inset:0;transform:rotate(-2.5deg);perspective:1100px}
+.layer-back,.layer-front,.tear{position:absolute;left:0;right:0;top:55%;height:auto;aspect-ratio:1.92}
+.layer-back{z-index:1;border-radius:3px;background:linear-gradient(#a19f83,#c9c5aa 20%,#dedbc5);box-shadow:0 12px 20px #44442b26,0 3px 6px #44442b30}
+.layer-front{z-index:3;background:linear-gradient(154deg,#efecd9,#e5e1ca);border-radius:3px}
+.layer-front:after,.panel:after{position:absolute;inset:0;content:"";pointer-events:none;background:repeating-linear-gradient(83deg,#433a1f06 0 1px,transparent 1px 4px)}
+.address{position:absolute;top:52%;left:13%;font-size:clamp(17px,4vw,24px);letter-spacing:.06em}
+.address small{display:block;margin-top:7px;font:11px Georgia;letter-spacing:.18em;color:#555540}
+.postage{position:absolute;right:8%;top:22%;display:flex;align-items:flex-start;gap:5px;transform:rotate(-5deg)}
+.stamp{width:clamp(28px,8vw,45px);aspect-ratio:1;display:grid;place-items:center;border:3px dotted #f4eedb;background:#9ebda5;color:#254e40;font-size:20px}
+.stamp+ .stamp{background:#d1c68f;color:#655434;transform:rotate(12deg)}
+.postmark{position:absolute;top:52%;right:26%;border:1px solid #63584f90;color:#63584f;border-radius:50%;padding:9px 4px;font:8px Georgia;transform:rotate(-14deg)}
+.tear{z-index:3;pointer-events:none}
+.strip,.curl{position:absolute;inset:0;pointer-events:none}
+.strip{background:linear-gradient(#e8e4ce 1%,#d4ceb4 5%,#f1eddb 10%)}
+.loose{background:linear-gradient(#c9c3a8 0%,#ede8d3 9%);transform:rotate(180deg);filter:brightness(1.03)}
+.curl{inset:auto;width:10px;height:12%;top:1%;border-radius:50%;background:linear-gradient(90deg,#7e76513d,#fff9e4,#c0bba0);transform:translateX(-50%) skewY(-12deg)}
+.grip{pointer-events:auto;position:absolute;z-index:4;top:0;left:100%;transform:translate(-50%,-36%);border:1px solid #77745c;border-radius:50%;background:#f9f6e9;color:#484737;width:32px;height:32px;padding:0;touch-action:none;cursor:grab;font:19px Georgia}
+.grip:active{cursor:grabbing}
+.layer-letter{z-index:2;position:absolute;top:57%;left:4%;width:92%;height:clamp(97px,24vw,144px);transform-style:preserve-3d}
+.layer-letter.letter-out{z-index:4}
+.panel{position:absolute;inset:0;padding:clamp(15px,4vw,27px);background:#faf7e8;box-shadow:0 4px 14px #403d2618;backface-visibility:hidden}
+.panel h1{font-size:clamp(20px,5vw,30px);font-weight:500;margin:0 0 12px}
+.panel p{font-size:clamp(13px,3.3vw,16px);line-height:1.6;margin:0}
+.upper{top:-100%;bottom:100%;transform-origin:50% 100%;transform:rotateX(-180deg)}
+.lower{top:100%;bottom:-100%;transform-origin:50% 0;transform:rotateX(180deg)}
+.fold-shadow{position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(transparent,#61563266)}
+.lower .fold-shadow{background:linear-gradient(#61563266,transparent)}
+.sign{display:block;margin-top:12px;color:#706951}
+.hint{position:absolute;top:calc(55% + min(51vw,229px) + 20px);width:100%;margin:0;text-align:center;font-size:13px;color:#5a5745;letter-spacing:.08em}
+.close{position:absolute;right:0;top:0;border:1px solid #7b7763;border-radius:50%;color:#494635;background:#f8f5e8;width:36px;height:36px;cursor:pointer;font:24px Georgia}
+button:focus-visible{outline:2px solid #433b27;outline-offset:4px}
+[hidden]{display:none!important}
+@media(max-height:670px) and (min-width:460px){.scene{width:min(75vw,390px)}.layer-letter{height:120px}}
+@media(max-width:370px){.panel{padding:12px}.panel h1{margin-bottom:7px}.panel p{line-height:1.45}}
+.reader{position:absolute;top:50%;left:50%;translate:-50% -50%;z-index:5;width:min(720px,calc(100vw - 24px));height:min(760px,calc(100svh - 24px));display:grid;grid-template-rows:36px minmax(0,1fr) auto;touch-action:pan-y;padding:10px clamp(18px,5vw,44px) 10px;background:#faf7e8;box-shadow:0 10px 30px #403d2626}.reader .close{position:static;justify-self:end}.scene.reading .mail{visibility:hidden}
+.page{min-width:0;overflow:hidden;padding-top:6px}.page .indent{text-indent:2em}.page.short-viewport{overflow:auto}
+.page h1{font-size:clamp(19px,5vw,28px);font-weight:500;margin:0 0 14px}
+.page p{margin:0 0 .7em;font-size:clamp(14px,3.9vw,18px);line-height:1.7;overflow-wrap:anywhere}.page > :last-child{margin-bottom:0}
+.page .signature{text-align:right;margin:1em 0 0}
+.pager{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid #b9ae923d;padding-top:5px;color:#615a44;font-size:12px}
+.pager button{background:none;border:0;color:inherit;font-size:18px;min-width:44px;min-height:34px;cursor:pointer}
+.pager button:disabled{opacity:.32;cursor:default}
+@media(max-width:600px),(max-width:950px) and (max-height:500px){
+  main{
+    --safe-x:max(12px,env(safe-area-inset-left),env(safe-area-inset-right));
+    --safe-y:max(10px,env(safe-area-inset-top),env(safe-area-inset-bottom));
+    min-height:100dvh;
+    padding:var(--safe-y) var(--safe-x);
+  }
+  .scene{
+    --envelope-width:min(calc(100vw - 2 * var(--safe-x) - 44px),440px,calc(100dvh - 32px));
+    --envelope-top:calc(50% - var(--envelope-width) / 3.84);
+    width:var(--envelope-width);
+    min-height:0;
+    height:calc(100dvh - 2 * var(--safe-y));
+  }
+  .layer-back,.layer-front,.tear{top:var(--envelope-top)}
+  .layer-letter{top:calc(var(--envelope-top) + 2%);height:min(clamp(86px,26vw,132px),28dvh)}
+  .hint{top:calc(var(--envelope-top) + var(--envelope-width) / 1.92 + 16px);font-size:14px;line-height:1.5}
+  .grip,.reader .close{width:44px;height:44px}
+  .reader{
+    width:min(720px,calc(100vw - 2 * var(--safe-x)));
+    height:min(760px,calc(100dvh - 2 * var(--safe-y)));
+    grid-template-rows:44px minmax(0,1fr) auto;
+    padding:6px clamp(13px,4.2vw,24px);
+  }
+  .page p{font-size:16px;line-height:1.65}
+  .pager button{min-width:44px;min-height:44px}
+}
+</style>
+<link rel="stylesheet" href="capsules.css">
+<main>
+<div class="scene" id="scene">
+  <div class="mail" id="mail">
+    <div class="layer-back" id="back"></div>
+    <article class="layer-letter" id="letter" aria-hidden="true" tabindex="-1">
+      <section class="panel upper" id="upper"><div class="fold-shadow"></div></section>
+      <section class="panel"></section>
+      <section class="panel lower" id="lower"><div class="fold-shadow"></div></section>
+
+    </article>
+    <div class="layer-front" id="front">
+      <div class="address">致王誉铮<small>PERSONAL POST</small></div>
+      <div class="postage" aria-hidden="true"><span class="stamp">✿</span><span class="stamp">☂</span></div>
+      <div class="postmark" aria-hidden="true">AIR MAIL</div>
+    </div>
+    <div class="tear" id="tear">
+      <div class="strip" id="stuck"></div><div class="strip loose" id="loose" hidden></div>
+      <div class="curl" id="curl" hidden></div>
+      <button class="grip" id="grip" aria-label="向左拖动或点击拆信" aria-describedby="hint" type="button">←</button>
+    </div>
+  </div>
+  <p class="hint" id="hint">按住箭头向左撕开信封</p>
+  <div class="reader" id="reader" hidden>
+    <button class="close" id="close" type="button" aria-label="合上信封，再拆一次">×</button>
+    <section class="page" id="page"></section>
+        <nav class="pager" aria-label="信纸翻页">
+          <button id="previous" type="button" aria-label="上一页" disabled>←</button>
+          <span id="page-count" aria-live="polite"></span>
+          <button id="next" type="button" aria-label="下一页">→</button>
+          <button id="station-button" type="button" hidden>点击前往下一站</button>
+        </nav>
+    <template id="letter-text">
+      <h1>To 王誉铮：</h1>
+      <p>首先，祝你二十二岁生日快乐！</p>
+      <p>时间是一件很奇妙的东西。它像潮汐悄无声息地漫过来，在不经意间将许多旧日的痕迹留在岸边；又像一列驶向远方的列车，载着我们经过不同的站台，看过沿途的风景，也带着对未知的期待，继续奔赴下一程。</p>
+      <p>从二十一岁到二十二岁，听起来不过是一岁之差，但这一年里你有过新的开始，也经历过许多值得回忆的时刻，有过踌躇与迟疑，也一定比从前更加了解自己。在我的印象里，你一直是一个少年意气、恣意鲜活的人，会努力去实现自己心中的理想主义，哪怕最终的结果未必如愿。我很欣慰看到你从去年那种，像一个不慎坠入深渊，却失去了挣扎的力气，放任自己溺水下沉的人，变回来我印象里你应该是的开心的积极的有生命力的样子，虽然现在你仍有迷茫焦虑疲惫的时刻，但我相信你已经相比于上一岁找到了更多自己。</p>
+      <p>我希望你能记得那些让自己闪闪发光的时刻，不必对偶尔的失意耿耿于怀。人生本就不是一场时时都有回音的远行，有些种子需要很久才会破土，有些答案也要等走过一段路之后才能在某个看似寻常的瞬间豁然明朗。</p>
+      <p>二十二岁，希望你比以往更加自信、从容，也更加坚定地相信自己的选择。愿你不会因为一时的得失而怀疑自己，也不会因为旁人的步伐而打乱自己的节奏。愿你能去往更辽阔的地方，看更高远的山，遇见更多有趣的人，经历那些曾经只在想象中出现的故事。也愿你见过更多风景之后依然会为某一场日落驻足、为一阵恰到好处的晚风感到欣喜，愿你在追逐远方的同时不会错过身边细碎而真实的幸福。</p>
+      <p>也希望新的一岁能给你带来许多好消息。愿你所期待的机会如期而至，所付出的努力都有回响，愿那些曾经困扰你的事情慢慢有了答案，想去的地方终有抵达的一天，想做的事情也都顺利迈出了第一步。倘若途中偶有风雨，也愿你总能找到自己的方向，不必因为一段路途的崎岖就怀疑自己所选择的道路是否正确。人生有太多尚未揭晓的篇章，而你不必急着读完所有的序言就下定论，尽管带着自己的热忱与期待，去书写那些独属于你的故事吧。</p>
+      <p>二十二岁，依然祝你找到自己，也祝你能始终自由地成为自己，而我也会在此过程中，一直陪在你身边与你一起。</p>
+      <p>生日快乐。</p>
+      <p class="signature">From：张凝佳<br><time datetime="2026-11-17">2026.11.17</time></p>
+    </template>
+  </div>
+</div>
+</main>
+<section class="capsules" id="capsules" hidden aria-labelledby="capsule-heading">
+  <div class="capsule-shell" id="capsule-shell">
+    <header class="capsule-heading"><h1 id="capsule-heading" tabindex="-1">扭蛋机</h1></header>
+    <div class="machine" id="capsule-machine">
+      <div class="machine-cap"></div>
+      <div class="machine-window"><div class="stock" id="capsule-stock" aria-hidden="true"></div></div>
+      <div class="machine-base">
+        <button class="knob" id="capsule-draw" type="button">扭蛋</button>
+        <div class="chute" id="capsule-chute" aria-hidden="true"></div>
+      </div>
+    </div>
+    <p class="machine-status" id="capsule-status" aria-live="polite"></p>
+    <section class="cabinet" aria-labelledby="cabinet-heading">
+      <div class="cabinet-header"><h2 id="cabinet-heading">收藏柜</h2><span class="cabinet-count" id="capsule-count">0 / 29</span></div>
+      <div class="collection" id="capsule-collection"></div>
+      <div class="cabinet-actions">
+        <button id="capsule-save" type="button" disabled>保存收藏</button>
+        <button id="capsule-reset" type="button" disabled>再抽一轮</button>
+      </div>
+      <p id="capsule-save-status" class="cabinet-message" role="status"></p>
+    </section>
+  </div>
+  <div class="capsule-overlay" id="capsule-overlay" hidden>
+    <div class="flight" id="capsule-flight" aria-hidden="true" hidden><span class="orb half"></span><span class="orb half"></span></div>
+    <article class="capsule-paper" id="capsule-paper" role="dialog" aria-modal="true" aria-labelledby="capsule-title" hidden>
+      <header class="capsule-paper-header">
+        <div><h2 id="capsule-title"></h2><div class="capsule-date" id="capsule-date" hidden></div></div>
+        <button class="capsule-close" id="capsule-close" aria-label="收回信件" type="button">×</button>
+      </header>
+      <div class="capsule-content" id="capsule-content" tabindex="0"></div>
+      <button id="capsule-play" type="button" hidden>播放《陪你过冬天》</button>
+    </article>
+  </div>
+</section>
+
+<script>
+const byId = id => document.getElementById(id);
+const scene = byId('scene');
+const mail = byId('mail');
+const back = byId('back');
+const front = byId('front');
+const letter = byId('letter');
+const upper = byId('upper');
+const lower = byId('lower');
+const tear = byId('tear');
+const stuck = byId('stuck');
+const loose = byId('loose');
+const curl = byId('curl');
+const grip = byId('grip');
+const hint = byId('hint');
+const close = byId('close');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const reader = byId('reader');
+const page = byId('page');
+const previous = byId('previous');
+const next = byId('next');
+const pageCount = byId('page-count');
+let letterLength = 0;
+const blocks = Array.from(byId('letter-text').content.children, node => {
+  const chars = Array.from(node.textContent);
+  const start = letterLength;
+  letterLength += chars.length;
+  return {node, chars, start, end:letterLength, whole:node.matches('h1,.signature')};
+});
+let pageIndex = 0;
+let pageRanges = [];
+let swipe;
+let resizeFrame;
+
+function renderText(start, end) {
+  const content = document.createDocumentFragment();
+  for (const block of blocks) {
+    if (block.end <= start || block.start >= end) continue;
+    const element = block.node.cloneNode(block.whole);
+    if (!block.whole) {
+      element.textContent = block.chars.slice(Math.max(0, start - block.start), end - block.start).join('');
+      element.classList.toggle('indent', start <= block.start);
+    }
+    content.append(element);
+  }
+  page.replaceChildren(content);
+}
+
+function lineEndings(start) {
+  renderText(start, letterLength);
+  const endings = [];
+  const range = document.createRange();
+  const remaining = blocks.filter(block => block.end > start);
+  for (const [index, element] of Array.from(page.children).entries()) {
+    const block = remaining[index];
+    if (!block.whole) {
+      const text = element.firstChild;
+      const begin = Math.max(start, block.start);
+      let previousTop;
+      let offset = 0;
+      for (let position = begin; position < block.end; position++) {
+        const nextOffset = offset + block.chars[position - block.start].length;
+        range.setStart(text, offset);
+        range.setEnd(text, nextOffset);
+        const top = range.getBoundingClientRect().top;
+        if (previousTop !== undefined && Math.abs(top - previousTop) > 1) endings.push(position);
+        previousTop = top;
+        offset = nextOffset;
+      }
+    }
+    endings.push(block.end);
+  }
+  return endings;
+}
+
+function fitPage(start, endings) {
+  let low = 0;
+  let high = endings.length - 1;
+  let end;
+  while (low <= high) {
+    const index = Math.floor((low + high) / 2);
+    renderText(start, endings[index]);
+    if (page.scrollHeight <= page.clientHeight) {
+      end = endings[index];
+      low = index + 1;
+    } else {
+      high = index - 1;
+    }
+  }
+  return end;
+}
+
+function paginate(offset = 0) {
+  page.classList.remove('short-viewport');
+  pageRanges = [];
+  for (let start = 0; start < letterLength;) {
+    const endings = lineEndings(start);
+    const fitted = fitPage(start, endings);
+    const end = fitted ?? endings[0];
+    pageRanges.push({start,end,scroll:!fitted});
+    start = end;
+  }
+  showPage(pageRanges.findIndex(range => offset < range.end));
+}
+
+function showPage(index, direction = 0) {
+  const range = pageRanges[index];
+  if (!range) return;
+  pageIndex = index;
+  page.classList.toggle('short-viewport', range.scroll);
+  renderText(range.start, range.end);
+  page.scrollTop = 0;
+  page.setAttribute('aria-label', '第 ' + (index + 1) + ' 页');
+  previous.disabled = index === 0;
+  next.disabled = index === pageRanges.length - 1;
+  next.hidden = next.disabled;
+  document.getElementById('station-button').hidden = !next.disabled;
+  pageCount.textContent = (index + 1) + ' / ' + pageRanges.length;
+  if (direction && !reducedMotion.matches) {
+    page.animate([
+      {transform:'translateX(' + (direction * 16) + 'px)',opacity:0},
+      {transform:'translateX(0)',opacity:1}
+    ], {duration:220,easing:'ease-out'});
+  }
+}
+window.addEventListener('resize', () => {
+  if (reader.hidden) return;
+  cancelAnimationFrame(resizeFrame);
+  resizeFrame = requestAnimationFrame(() => {
+    if (!reader.hidden) paginate(pageRanges[pageIndex].start);
+  });
+});
+function turnPage(direction) {
+  showPage(pageIndex + direction, direction);
+}
+previous.addEventListener('click', () => turnPage(-1));
+next.addEventListener('click', () => turnPage(1));
+reader.addEventListener('keydown', event => {
+  if (reader.hidden || !['ArrowLeft','ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  turnPage(event.key === 'ArrowRight' ? 1 : -1);
+});
+reader.addEventListener('pointerdown', event => {
+  if (!event.isPrimary || event.button !== 0 || event.target.closest('button')) return;
+  swipe = {id:event.pointerId,x:event.clientX,y:event.clientY};
+});
+reader.addEventListener('pointerup', event => {
+  if (swipe?.id !== event.pointerId) return;
+  const dx = event.clientX - swipe.x;
+  const dy = event.clientY - swipe.y;
+  swipe = null;
+  if (Math.abs(dx) >= 42 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+    turnPage(dx < 0 ? 1 : -1);
+  }
+});
+reader.addEventListener('pointercancel', () => { swipe = null; });
+
+let seed = 11;
+const edge = Array.from({length:241}, (_, index) => {
+  seed = seed * 16807 % 2147483647;
+  const phase = index % 4 / 4;
+  return 10 + 1.1 * Math.sin(phase * Math.PI) + .65 * (seed / 2147483647 - .5);
+});
+let progress = 1;
+let drag;
+let busy = false;
+let suppressClick = false;
+
+function edgePoint(x) {
+  const position = x * 240;
+  const index = Math.floor(position);
+  const y = edge[index] + ((edge[index + 1] ?? edge[index]) - edge[index]) * (position - index);
+  return (x * 100).toFixed(3) + '% ' + y.toFixed(3) + '%';
+}
+function edgeSlice(start, end) {
+  const points = [edgePoint(start)];
+  for (let index = Math.floor(start * 240) + 1; index < end * 240; index++) {
+    points.push(edgePoint(index / 240));
+  }
+  points.push(edgePoint(end));
+  return points;
+}
+function showTear(value) {
+  progress = Math.max(0, Math.min(1, value));
+  const x = progress * 100 + '%';
+  stuck.style.clipPath = 'polygon(0 0,' + x + ' 0,' + edgeSlice(0, progress).reverse().join(',') + ')';
+  loose.style.clipPath = 'polygon(' + x + ' 0,100% 0,' + edgeSlice(progress, 1).reverse().join(',') + ')';
+  loose.style.transformOrigin = x + ' 10%';
+  grip.style.left = curl.style.left = x;
+  loose.hidden = curl.hidden = progress === 1;
+}
+front.style.clipPath = 'polygon(' + edgeSlice(0, 1).join(',') + ',100% 100%,0 100%)';
+showTear(1);
+
+function tweenTear(target, duration, ease) {
+  const initial = progress;
+  if (reducedMotion.matches) {
+    showTear(target);
+    return Promise.resolve();
+  }
+  return new Promise(resolve => {
+    const start = performance.now();
+    function frame(now) {
+      const time = Math.min(1, (now - start) / duration);
+      showTear(initial + (target - initial) * ease(time));
+      if (time < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
+function animate(element, keyframes, duration, easing = 'ease-in-out') {
+  return element.animate(keyframes, {
+    duration: reducedMotion.matches ? 0 : duration, easing, fill:'forwards'
+  }).finished;
+}
+async function unfold(panel, angle) {
+  await Promise.all([
+    animate(panel, [{transform:'rotateX(' + angle + 'deg)'},{transform:'rotateX(0deg)'}], 510),
+    animate(panel.querySelector('.fold-shadow'), [{opacity:0},{opacity:.62},{opacity:0}], 510)
+  ]);
+}
+async function openLetter(fromKeyboard = false) {
+  if (busy) return;
+  busy = true;
+  drag = null;
+  grip.disabled = true;
+  hint.hidden = true;
+  await tweenTear(0, 370, t => 1 - (1-t)**2);
+  grip.hidden = true;
+  await animate(tear, [{transform:'translateX(0)'},{transform:'translate(-32%,14px) rotate(-9deg)',opacity:0}], 320, 'ease-in');
+  tear.hidden = true;
+  const lift = Math.round(scene.clientHeight * .32);
+  await Promise.all([
+    animate(mail, [{transform:'rotate(-2.5deg)'},{transform:'rotate(0deg)'}], 540),
+    animate(letter, [{transform:'translateY(0)'},{transform:'translateY(-' + lift + 'px)'}], 620, 'cubic-bezier(.2,.7,.25,1)')
+  ]);
+  letter.classList.add('letter-out');
+  const drop = [{transform:'translateY(0)',opacity:1},{transform:'translateY(55%)',opacity:0}];
+  await Promise.all([animate(front, drop, 380, 'ease-in'),animate(back, drop, 380, 'ease-in')]);
+  await unfold(upper, -180);
+  await unfold(lower, 180);
+  const folded = letter.getBoundingClientRect();
+  reader.hidden = false;
+  scene.classList.add('reading');
+  paginate();
+  const expanded = reader.getBoundingClientRect();
+  if (!reducedMotion.matches) {
+    const dx = folded.left + folded.width / 2 - (expanded.left + expanded.width / 2);
+    const dy = folded.top + folded.height / 2 - (expanded.top + expanded.height / 2);
+    reader.animate([
+      {transform:'translate(' + dx + 'px,' + dy + 'px) scale(' + folded.width / expanded.width + ',' + folded.height * 3 / expanded.height + ')'},
+      {transform:'none'}
+    ], {duration:280,easing:'ease-out'});
+  }
+  if (fromKeyboard) close.focus({preventScroll:true});
+}
+grip.addEventListener('pointerdown', event => {
+  if (busy || event.button !== 0 || !event.isPrimary) return;
+  suppressClick = false;
+  drag = {x:event.clientX,id:event.pointerId,width:tear.offsetWidth};
+  grip.setPointerCapture(event.pointerId);
+});
+grip.addEventListener('pointermove', event => {
+  if (drag?.id !== event.pointerId) return;
+  const distance = drag.x - event.clientX;
+  if (Math.abs(distance) > 5) suppressClick = true;
+  showTear(1 - distance / drag.width);
+});
+async function endDrag(event) {
+  if (drag?.id !== event.pointerId) return;
+  drag = null;
+  if (event.type === 'pointerup' && 1 - progress >= 1/3) {
+    await openLetter();
+  } else if (progress < 1) {
+    busy = true;
+    await tweenTear(1, 380, t => 1 - (1-t)**3 * Math.cos(t * Math.PI * 3));
+    busy = false;
+  }
+}
+grip.addEventListener('pointerup', endDrag);
+grip.addEventListener('pointercancel', endDrag);
+grip.addEventListener('lostpointercapture', endDrag);
+grip.addEventListener('click', event => {
+  if (event.detail === 0 || !suppressClick) openLetter(event.detail === 0);
+});
+close.addEventListener('click', () => {
+  scene.getAnimations({subtree:true}).forEach(animation => animation.cancel());
+  letter.classList.remove('letter-out');
+  reader.hidden = true;
+  swipe = null;
+  letter.setAttribute('aria-hidden','true');
+  scene.classList.remove('reading');
+  tear.hidden = grip.hidden = hint.hidden = false;
+  grip.disabled = false;
+  busy = suppressClick = false;
+  showTear(1);
+  grip.focus({preventScroll:true});
+});
+</script>
+<script src="capsule-data.js"></script>
+<script src="capsules.js"></script>
+</html>
