@@ -98,7 +98,8 @@ const capsuleImages = {
 const capsuleInlineImages = {
   '2026-01-01': {afterParagraph:1, sources:['capsule-images/2026-01-01-combined.jpg']},
   '2026-05-01': {afterParagraph:1, sources:['capsule-images/2026-05-01-1.jpg','capsule-images/2026-05-01-2.jpg']},
-  '2025-11-19': {afterParagraph:1, sources:['capsule-images/2025-11-19-sunlight.jpg','capsule-images/2025-11-19-expo.jpg']}
+  '2025-11-19': {afterParagraph:1, sources:['capsule-images/2025-11-19-sunlight.jpg','capsule-images/2025-11-19-expo.jpg']},
+  '2026-10-05': {afterParagraph:1, sources:['capsule-images/2026-10-05-scooter.jpg']}
 };
 const capsuleEndImages = {
   '2025-10-31': 'capsule-images/2025-10-31.jpg',
